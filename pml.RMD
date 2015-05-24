@@ -1,0 +1,86 @@
+
+```{r}
+library(Hmisc)
+library(caret)
+library(randomForest)
+library(foreach)
+library(doParallel)
+options(warn=-1)
+```
+
+
+Setting the seed:
+
+```{r}
+set.seed(1234)
+```
+
+Let us load the data and get rid of errorneous data points:
+
+```{r}    
+trainData <- read.csv("~/Downloads/pml-training.csv", na.strings=c("#DIV/0!") )
+evalData  <- read.csv("~/Downloads/pml-testing.csv", na.strings=c("#DIV/0!") )
+```
+
+Better transform columns to numeric:
+
+```{r}    
+    for(i in 8:(ncol(trainData)-1)) {
+        trainData[,i] = as.numeric(as.character(trainData[,i]))
+    }
+
+for(i in 8:(ncol(evalData)-1)) {
+    evalData[,i] = as.numeric(as.character(evalData[,i]))
+}
+```
+
+What is the feature data:
+
+```{r}    
+featureData <- colnames(trainData[colSums(is.na(trainData)) == 0])[-(1:7)]
+modelData   <- trainData[featureData]
+
+myIndex  <- createDataPartition(y=modelData$classe, p=0.75, list=FALSE)
+training <- modelData[myIndex,]
+testing  <- modelData[-myIndex,]
+```
+Let us build random forests with 100 trees each. doParallel helps to do parallel computing instead of running simple loops:
+
+```{r}
+depend   <- training[-NCOL(training)]
+independ <- training$classe
+
+registerDoParallel()
+myRandomForest <- foreach(noTrees=rep(100, 6), .combine=randomForest::combine, .packages='randomForest') %dopar% {
+    randomForest(depend, independ, ntree=noTrees) 
+}
+```
+Here is the error report:
+
+```{r}
+predictTraining <- predict(myRandomForest, newdata=training)
+confusionMatrix(predictTraining,training$classe)
+
+predictTesting <- predict(myRandomForest, newdata=testing)
+confusionMatrix(predictTesting,testing$classe)
+```
+
+The test data has very high accuracy. It is quite satisfactory
+
+Here we generate the submission files as provided by coursera:
+
+```{r}
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+
+x <- evalData
+x <- x[featureData[featureData!='classe']]
+answers <- predict(myRandomForest, newdata=x)
+
+pml_write_files(answers)
+```
