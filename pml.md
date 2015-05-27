@@ -49,7 +49,7 @@ myIndex  <- createDataPartition(y=modelData$classe, p=0.75, list=FALSE)
 training <- modelData[myIndex,]
 testing  <- modelData[-myIndex,]
 ```
-Let us build random forests with 120 trees each. doParallel helps to do parallel computing instead of running simple loops:
+Let us build random forests with 100 trees each. doParallel helps to do parallel computing instead of running simple loops:
 
 
 ```r
@@ -57,7 +57,7 @@ depend   <- training[-NCOL(training)]
 independ <- training$classe
 
 registerDoParallel()
-myRandomForest <- foreach(noTrees=rep(4, 6), .combine=randomForest::combine, .packages='randomForest') %dopar% {
+myRandomForest <- foreach(noTrees=rep(100, 6), .combine=randomForest::combine, .packages='randomForest') %dopar% {
     randomForest(depend, independ, ntree=noTrees) 
 }
 ```
@@ -113,33 +113,33 @@ confusionMatrix(predictTesting,testing$classe)
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1392    5    0    0    1
-##          B    1  940    8    0    0
-##          C    0    4  845    6    0
-##          D    2    0    2  798    0
-##          E    0    0    0    0  900
+##          A 1395    3    0    0    0
+##          B    0  944    8    0    0
+##          C    0    2  846    6    0
+##          D    0    0    1  798    0
+##          E    0    0    0    0  901
 ## 
 ## Overall Statistics
-##                                          
-##                Accuracy : 0.9941         
-##                  95% CI : (0.9915, 0.996)
-##     No Information Rate : 0.2845         
-##     P-Value [Acc > NIR] : < 2.2e-16      
-##                                          
-##                   Kappa : 0.9925         
-##  Mcnemar's Test P-Value : NA             
+##                                           
+##                Accuracy : 0.9959          
+##                  95% CI : (0.9937, 0.9975)
+##     No Information Rate : 0.2845          
+##     P-Value [Acc > NIR] : < 2.2e-16       
+##                                           
+##                   Kappa : 0.9948          
+##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9978   0.9905   0.9883   0.9925   0.9989
-## Specificity            0.9983   0.9977   0.9975   0.9990   1.0000
-## Pos Pred Value         0.9957   0.9905   0.9883   0.9950   1.0000
-## Neg Pred Value         0.9991   0.9977   0.9975   0.9985   0.9998
+## Sensitivity            1.0000   0.9947   0.9895   0.9925   1.0000
+## Specificity            0.9991   0.9980   0.9980   0.9998   1.0000
+## Pos Pred Value         0.9979   0.9916   0.9906   0.9987   1.0000
+## Neg Pred Value         1.0000   0.9987   0.9978   0.9985   1.0000
 ## Prevalence             0.2845   0.1935   0.1743   0.1639   0.1837
-## Detection Rate         0.2838   0.1917   0.1723   0.1627   0.1835
-## Detection Prevalence   0.2851   0.1935   0.1743   0.1635   0.1835
-## Balanced Accuracy      0.9981   0.9941   0.9929   0.9958   0.9994
+## Detection Rate         0.2845   0.1925   0.1725   0.1627   0.1837
+## Detection Prevalence   0.2851   0.1941   0.1741   0.1629   0.1837
+## Balanced Accuracy      0.9996   0.9964   0.9937   0.9961   1.0000
 ```
 
 The test data has very high accuracy. It is quite satisfactory
