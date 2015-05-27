@@ -2,10 +2,71 @@
 
 ```r
 library(Hmisc)
+```
+
+```
+## Loading required package: grid
+## Loading required package: lattice
+## Loading required package: survival
+## Loading required package: splines
+## Loading required package: Formula
+## Loading required package: ggplot2
+## 
+## Attaching package: 'Hmisc'
+## 
+## The following objects are masked from 'package:base':
+## 
+##     format.pval, round.POSIXt, trunc.POSIXt, units
+```
+
+```r
 library(caret)
+```
+
+```
+## 
+## Attaching package: 'caret'
+## 
+## The following object is masked from 'package:survival':
+## 
+##     cluster
+```
+
+```r
 library(randomForest)
+```
+
+```
+## randomForest 4.6-10
+## Type rfNews() to see new features/changes/bug fixes.
+## 
+## Attaching package: 'randomForest'
+## 
+## The following object is masked from 'package:Hmisc':
+## 
+##     combine
+```
+
+```r
 library(foreach)
+```
+
+```
+## foreach: simple, scalable parallel programming from Revolution Analytics
+## Use Revolution R for scalability, fault tolerance and more.
+## http://www.revolutionanalytics.com
+```
+
+```r
 library(doParallel)
+```
+
+```
+## Loading required package: iterators
+## Loading required package: parallel
+```
+
+```r
 options(warn=-1)
 ```
 
@@ -21,8 +82,8 @@ Let us load the data and get rid of errorneous data points:
 
 
 ```r
-trainData <- read.csv("~/Downloads/pml-training.csv", na.strings=c("#DIV/0!") )
-evalData  <- read.csv("~/Downloads/pml-testing.csv", na.strings=c("#DIV/0!") )
+trainData <- read.csv("pml-training.csv", na.strings=c("#DIV/0!") )
+evalData  <- read.csv("pml-testing.csv", na.strings=c("#DIV/0!") )
 ```
 
 Better transform columns to numeric:
@@ -114,32 +175,32 @@ confusionMatrix(predictTesting,testing$classe)
 ##           Reference
 ## Prediction    A    B    C    D    E
 ##          A 1395    3    0    0    0
-##          B    0  944    8    0    0
-##          C    0    2  846    6    0
-##          D    0    0    1  798    0
+##          B    0  946   10    0    0
+##          C    0    0  844    9    0
+##          D    0    0    1  795    0
 ##          E    0    0    0    0  901
 ## 
 ## Overall Statistics
-##                                           
-##                Accuracy : 0.9959          
-##                  95% CI : (0.9937, 0.9975)
-##     No Information Rate : 0.2845          
-##     P-Value [Acc > NIR] : < 2.2e-16       
-##                                           
-##                   Kappa : 0.9948          
-##  Mcnemar's Test P-Value : NA              
+##                                         
+##                Accuracy : 0.9953        
+##                  95% CI : (0.993, 0.997)
+##     No Information Rate : 0.2845        
+##     P-Value [Acc > NIR] : < 2.2e-16     
+##                                         
+##                   Kappa : 0.9941        
+##  Mcnemar's Test P-Value : NA            
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            1.0000   0.9947   0.9895   0.9925   1.0000
-## Specificity            0.9991   0.9980   0.9980   0.9998   1.0000
-## Pos Pred Value         0.9979   0.9916   0.9906   0.9987   1.0000
-## Neg Pred Value         1.0000   0.9987   0.9978   0.9985   1.0000
+## Sensitivity            1.0000   0.9968   0.9871   0.9888   1.0000
+## Specificity            0.9991   0.9975   0.9978   0.9998   1.0000
+## Pos Pred Value         0.9979   0.9895   0.9894   0.9987   1.0000
+## Neg Pred Value         1.0000   0.9992   0.9973   0.9978   1.0000
 ## Prevalence             0.2845   0.1935   0.1743   0.1639   0.1837
-## Detection Rate         0.2845   0.1925   0.1725   0.1627   0.1837
-## Detection Prevalence   0.2851   0.1941   0.1741   0.1629   0.1837
-## Balanced Accuracy      0.9996   0.9964   0.9937   0.9961   1.0000
+## Detection Rate         0.2845   0.1929   0.1721   0.1621   0.1837
+## Detection Prevalence   0.2851   0.1949   0.1739   0.1623   0.1837
+## Balanced Accuracy      0.9996   0.9972   0.9925   0.9943   1.0000
 ```
 
 The test data has very high accuracy. It is quite satisfactory
