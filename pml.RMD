@@ -18,8 +18,8 @@ set.seed(1234)
 Let us load the data and get rid of errorneous data points:
 
 ```{r}    
-trainData <- read.csv("~/Downloads/pml-training.csv", na.strings=c("#DIV/0!") )
-evalData  <- read.csv("~/Downloads/pml-testing.csv", na.strings=c("#DIV/0!") )
+trainData <- read.csv("pml-training.csv", na.strings=c("#DIV/0!") )
+evalData  <- read.csv("pml-testing.csv", na.strings=c("#DIV/0!") )
 ```
 
 Better transform columns to numeric:
